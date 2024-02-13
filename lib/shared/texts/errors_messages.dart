@@ -1,0 +1,4 @@
+const IS_REQUIRED = "is required";
+const PREFIX_FILL_FIELD_MESSAGE_ERROR = "this field";
+const FILL_FIELD_MESSAGE_ERROR = "$PREFIX_FILL_FIELD_MESSAGE_ERROR $IS_REQUIRED";
+const PASSWORD_AND_CONFIRM_NOT_SAME = "passwords not same";
