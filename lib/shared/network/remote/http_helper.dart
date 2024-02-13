@@ -12,12 +12,10 @@ Future<http.Response> postRequest({
 }) async {
   // try{
     // http
-    http.Response response = await http.post(
+     return await http.post(
         Uri.parse(url), body: data
     );
-
-    return response;
-  //
+     //
   // }catch(ex){
   //   return jsonDecode(ex.toString());
   // }
@@ -25,7 +23,7 @@ Future<http.Response> postRequest({
 
 
 Future<http.Response> getRequest({required String url}) async {
-    http.Response response = await http.post(
+    http.Response response = await http.get(
         Uri.parse(url),
     );
     return response;

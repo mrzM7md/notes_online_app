@@ -84,7 +84,7 @@ class AppCubit extends Cubit<AppStates> {
         }
         else {
           emit(AuthFailConnectionSignupState(
-              message: 'check your connection !'
+              message: jsonDecode(response.body).toString()
           ));
         }
       }catch(ex){
@@ -92,7 +92,13 @@ class AppCubit extends Cubit<AppStates> {
             message: 'email or username already used !!'
         ));
       }
-    });
+    })
+        .catchError((error){
+          emit(AuthFailConnectionSignupState(
+              message: error.toString()
+          ));
+    })
+    ;
   }
 
 //###################### END SIGNUP PROCESS ######################//
@@ -109,7 +115,7 @@ class AppCubit extends Cubit<AppStates> {
       'password' : password,
     };
 
-    await postRequest(url: HTTP_LINK_LOGIN, data: data)
+    postRequest(url: HTTP_LINK_LOGIN, data: data)
         .then((response) {
       try {
         if(response.statusCode == 200) {
@@ -140,7 +146,14 @@ class AppCubit extends Cubit<AppStates> {
             message: 'wrong info !!'
         ));
       }
-    });
+    })
+
+        .catchError((error){
+      emit(AuthFailConnectionSignupState(
+          message: error.toString()
+      ));
+    })
+    ;
   }
 
 //###################### END LOGIN PROCESS ######################//
