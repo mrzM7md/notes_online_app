@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 
-const String HTTP_SERVER_LINK = 'http://10.0.2.2/notes_app_api';
+const String HTTP_SERVER_LINK = 'https://notes-online-api.mrzsw.com';
+// const String HTTP_SERVER_LINK = 'http://10.0.2.2/notes_app_api';
 
 const String HTTP_LINK_SIGNUP = '$HTTP_SERVER_LINK/auth/signup.php';
 const String HTTP_LINK_LOGIN = '$HTTP_SERVER_LINK/auth/login.php';
