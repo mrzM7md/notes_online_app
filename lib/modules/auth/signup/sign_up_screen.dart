@@ -8,6 +8,7 @@ import 'package:notes_online_app/shared/components/custom_build_input.dart';
 import 'package:notes_online_app/shared/components/custom_title.dart';
 import 'package:notes_online_app/shared/style/colors.dart';
 import 'package:notes_online_app/shared/texts/fields_names.dart';
+import 'package:notes_online_app/shared/texts/routes.dart';
 
 import '../../../shared/app_organization.dart';
 import '../../../shared/components/custom_ask_to_sign_up_or_login.dart';
@@ -16,8 +17,18 @@ import '../../../shared/cubit/cubit.dart';
 import '../../../shared/cubit/states.dart';
 import '../../../shared/texts/errors_messages.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final FocusNode _usernameFocusNode = FocusNode(),
+      _emailFocusNode = FocusNode(),
+      _passwordFocusNode = FocusNode(),
+      _confirmPasswordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +38,6 @@ class SignUpScreen extends StatelessWidget {
         passwordController = TextEditingController(),
         confirmPasswordController = TextEditingController();
 
-    FocusNode? usernameFocusNode = FocusNode(),
-        emailFocusNode = FocusNode(),
-        passwordFocusNode = FocusNode(),
-        confirmPasswordFocusNode = FocusNode();
 
     return SafeArea(
       child: BlocConsumer<AppCubit, AppStates>(
@@ -40,6 +47,7 @@ class SignUpScreen extends StatelessWidget {
                   bkgColor: Colors.greenAccent,
                   textColor: Colors.black
               );
+              navigateTo(context, LOGIN_ROUTE);
             }
             else if(state is AuthFailSignupState){
                 getToast(message: state.message,
@@ -98,7 +106,7 @@ class SignUpScreen extends StatelessWidget {
                           hintInput: "$YOUR_NAME $IS_REQUIRED",
                           prefixInputIcon: Icons.person_2_outlined,
                           validate: (value) => getFieldErrorMessage("$value"),
-                          onFieldSubmitted: (value) => focusToNode(context, usernameFocusNode),
+                          onFieldSubmitted: (value) => focusToNode(context, _usernameFocusNode),
                         ),
                         const SizedBox(
                           height: 20,
@@ -106,13 +114,13 @@ class SignUpScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: USER_NAME,
                           controller: usernameController,
-                          focusNode: usernameFocusNode,
+                          focusNode: _usernameFocusNode,
                           inputType: TextInputType.name,
                           hintInput: "$USER_NAME $IS_REQUIRED",
                           prefixInputIcon: FontAwesomeIcons.at,
                           isPrefixIconFromFontAwesome: true,
                           validate: (value) => getFieldErrorMessage("$value"),
-                          onFieldSubmitted: (value) => focusToNode(context, emailFocusNode),
+                          onFieldSubmitted: (value) => focusToNode(context, _emailFocusNode),
                         ),
                         const SizedBox(
                           height: 20,
@@ -120,12 +128,12 @@ class SignUpScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: EMAIL,
                           controller: emailController,
-                          focusNode: emailFocusNode,
+                          focusNode: _emailFocusNode,
                           inputType: TextInputType.emailAddress,
                           hintInput: "$EMAIL $IS_REQUIRED",
                           prefixInputIcon: Icons.email_outlined,
                           validate: (value) => getFieldErrorMessage("$value"),
-                          onFieldSubmitted: (value) => focusToNode(context, passwordFocusNode),
+                          onFieldSubmitted: (value) => focusToNode(context, _passwordFocusNode),
                         ),
                         const SizedBox(
                           height: 20,
@@ -133,7 +141,7 @@ class SignUpScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: PASSWORD,
                           controller: passwordController,
-                          focusNode: passwordFocusNode,
+                          focusNode: _passwordFocusNode,
                           inputType: TextInputType.visiblePassword,
                           hintInput: "$PASSWORD $IS_REQUIRED",
                           prefixInputIcon: Icons.password_outlined,
@@ -143,7 +151,7 @@ class SignUpScreen extends StatelessWidget {
                               : Icons.visibility_outlined,
                           isVisiblePassword: backend.isPasswordVisible,
                           onPressedSuffixIcon: () =>backend.changePasswordVisibility(),
-                          onFieldSubmitted: (value) => focusToNode(context, confirmPasswordFocusNode),
+                          onFieldSubmitted: (value) => focusToNode(context, _confirmPasswordFocusNode),
                         ),
                         const SizedBox(
                           height: 20,
@@ -151,7 +159,7 @@ class SignUpScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: CONFIRM_PASSWORD,
                           controller: confirmPasswordController,
-                          focusNode: confirmPasswordFocusNode,
+                          focusNode: _confirmPasswordFocusNode,
                           inputType: TextInputType.visiblePassword,
                           hintInput: "$CONFIRM_PASSWORD $IS_REQUIRED",
                           prefixInputIcon: Icons.password_outlined,
@@ -214,5 +222,15 @@ class SignUpScreen extends StatelessWidget {
             );
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+
+    super.dispose();
   }
 }

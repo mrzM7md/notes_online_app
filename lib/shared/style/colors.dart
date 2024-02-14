@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // ########## START LIGHT MODE COLORS  ########## //
 const primaryLightModeColor = Colors.white;
 const secondaryLightModeColor = Colors.black;
-const bodyLightModeColor = Color(0xFFF5E4CB);
+const thirdLightModeColor = Color(0xFFCCCCCC);
 // ########## END LIGHT MODE COLORS  ########## //
 
 

@@ -6,9 +6,11 @@ import 'package:notes_online_app/modules/main/widgets/custom_search_button.dart'
 import 'package:notes_online_app/shared/app_organization.dart';
 import 'package:notes_online_app/shared/components/custom_build_appbar.dart';
 import 'package:notes_online_app/shared/components/custom_title.dart';
+import 'package:notes_online_app/shared/components/helper_methods.dart';
 import 'package:notes_online_app/shared/cubit/cubit.dart';
 import 'package:notes_online_app/shared/cubit/states.dart';
 import 'package:notes_online_app/shared/style/colors.dart';
+import 'package:notes_online_app/shared/texts/routes.dart';
 
 class NotesScreen extends StatelessWidget {
   const NotesScreen({super.key});
@@ -51,7 +53,11 @@ class NotesScreen extends StatelessWidget {
                               height: 20,
                             ),
 
-                            CustomSearchButton(),
+                            CustomSearchButton(
+                              onClick: () {
+                                navigateTo(context, SEARCH_ROUTE);
+                              },
+                            ),
 
                             const SizedBox(
                               height: 20,
@@ -63,7 +69,7 @@ class NotesScreen extends StatelessWidget {
                                 height: 15.0,
                               ),
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: 2,
+                              itemCount: 22,
                               itemBuilder:(BuildContext context, int index) => CustomBuildNoteItem(),
                             ),
                           ],

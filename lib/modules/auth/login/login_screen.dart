@@ -17,16 +17,21 @@ import '../../../shared/cubit/states.dart';
 import '../../../shared/texts/errors_messages.dart';
 import '../../../shared/texts/routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     TextEditingController
         usernameController = TextEditingController(),
         passwordController = TextEditingController();
-
-    FocusNode? passwordFocusNode = FocusNode();
 
     return SafeArea(
       child: BlocConsumer<AppCubit, AppStates>(
@@ -83,12 +88,13 @@ class LoginScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: "$EMAIL / $USER_NAME",
                           controller: usernameController,
+                          focusNode: _emailFocusNode,
                           inputType: TextInputType.emailAddress,
                           hintInput: "$EMAIL / $USER_NAME $IS_REQUIRED",
                           prefixInputIcon: FontAwesomeIcons.at,
                           isPrefixIconFromFontAwesome: true,
                           validate: (value) => getFieldErrorMessage("$value"),
-                          onFieldSubmitted: (value) => focusToNode(context, passwordFocusNode),
+                          onFieldSubmitted: (value) => focusToNode(context, _passwordFocusNode),
                         ),
                         const SizedBox(
                           height: 20,
@@ -96,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                         CustomBuildInput(
                           textTitle: PASSWORD,
                           controller: passwordController,
-                          focusNode: passwordFocusNode,
+                          focusNode: _passwordFocusNode,
                           inputType: TextInputType.visiblePassword,
                           hintInput: "$PASSWORD $IS_REQUIRED",
                           prefixInputIcon: Icons.password_outlined,
@@ -148,5 +154,17 @@ class LoginScreen extends StatelessWidget {
             );
           }),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _emailFocusNode.requestFocus());
+  }
+
+  @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
   }
 }

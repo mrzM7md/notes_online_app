@@ -30,40 +30,42 @@ class CustomButton extends StatelessWidget {
       onTap: (){
         onPressed();
       },
-      child: Container(
-        padding: const EdgeInsetsDirectional.all(8),
-        width: isStreachButton ? values.SCREEN_WIDTH : null,
-        decoration: BoxDecoration(
-          color: isSearchButton
-              ?
-             isDarkMode ? buttonDarkModeColor.withOpacity(0.45) : primaryLightModeColor
-             :
-             isDarkMode ? buttonDarkModeColor.withOpacity(0.45) : secondaryLightModeColor,
-          borderRadius: !isSharpButton ? BorderRadius.circular(5) : null,
-        ),
-        child: Row(
-          mainAxisAlignment: isSearchButton ? MainAxisAlignment.start : MainAxisAlignment.center,
-          children: [
-            ConditionalBuilder(condition: isSearchButton,
-                builder:(context) => Container(margin: const EdgeInsetsDirectional.symmetric(horizontal: 5),
-                  child: Icon(
-                    CupertinoIcons.search,
-                    color: isDarkMode ? thirdDarkModeColor : Colors.black,
-                  ),),
-                fallback: null,
-            ),
-            Text(
-              text.toUpperCase(),
-              // textAlign: TextAlign.center,
-              style: TextStyle(
-                color: isSearchButton
-                    ? isDarkMode ? secondaryDarkModeColor : Colors.black
-                    : isDarkMode ? Colors.black : primaryLightModeColor,
-                fontWeight: FontWeight.bold,
-                fontSize: fontSize,
+      child: Card(
+        elevation: isSearchButton ? 5.0 : null,
+        color:
+        isSearchButton
+            ?
+        (isDarkMode ? buttonDarkModeColor.withOpacity(0.45) : primaryLightModeColor)
+            :
+        (isDarkMode ? buttonDarkModeColor.withOpacity(0.45) : secondaryLightModeColor),
+
+        child: Container(
+          padding: const EdgeInsetsDirectional.all(8),
+          width: isStreachButton ? values.SCREEN_WIDTH : null,
+          child: Row(
+            mainAxisAlignment: isSearchButton ? MainAxisAlignment.start : MainAxisAlignment.center,
+            children: [
+              ConditionalBuilder(condition: isSearchButton,
+                  builder:(context) => Container(margin: const EdgeInsetsDirectional.symmetric(horizontal: 5),
+                    child: Icon(
+                      CupertinoIcons.search,
+                      color: isDarkMode ? thirdDarkModeColor : Colors.black,
+                    ),),
+                  fallback: null,
               ),
-            ),
-          ],
+              Text(
+                text.toUpperCase(),
+                // textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isSearchButton
+                      ? isDarkMode ? secondaryDarkModeColor : Colors.black
+                      : isDarkMode ? Colors.black : primaryLightModeColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSize,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

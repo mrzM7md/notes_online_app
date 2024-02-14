@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_online_app/modules/auth/login/login_screen.dart';
 import 'package:notes_online_app/modules/main/notes_screen.dart';
+import 'package:notes_online_app/modules/main/search_screen.dart';
 import 'package:notes_online_app/shared/app_organization.dart';
 import 'package:notes_online_app/shared/block_observer.dart';
 import 'package:notes_online_app/shared/cubit/cubit.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
                 SIGNUP_ROUTE: (context) => const SignUpScreen(),
                 LOGIN_ROUTE: (context) => const LoginScreen(),
                 NOTES_ROUTE: (context) => const NotesScreen(),
+                SEARCH_ROUTE: (context) => const SearchScreen(),
               },
               debugShowCheckedModeBanner: false,
               themeMode: AppOrganization.aoIsDarkMode
