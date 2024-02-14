@@ -2,7 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:notes_online_app/modules/auth/shared/components/custom_appbar_signup.dart';
+import 'package:notes_online_app/shared/components/custom_build_appbar.dart';
 import 'package:notes_online_app/shared/components/customButton.dart';
 import 'package:notes_online_app/shared/components/custom_build_input.dart';
 import 'package:notes_online_app/shared/components/custom_title.dart';
@@ -76,7 +76,7 @@ class SignUpScreen extends StatelessWidget {
                         const SizedBox(
                           height: 15,
                         ),
-                        CustomAppbarAuth(
+                        CustomBuildAppbar(
                           clickMode: () {
                             backend.changeAppMode();
                           },
