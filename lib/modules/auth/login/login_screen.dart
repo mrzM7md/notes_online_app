@@ -41,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   bkgColor: Colors.greenAccent,
                   textColor: Colors.black
               );
+
               navigateTo(context, NOTES_ROUTE);
             }
             else if(state is AuthFailLoginState){
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           },
           builder: (BuildContext context, state) {
-            var controller = AppCubit.get(context);
+            var cubit = AppCubit.get(context);
             var formKey = GlobalKey<FormState>();
 
             return Scaffold(
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 15,),
                         CustomBuildAppbar(
                           clickMode: (){
-                            controller.changeAppMode();
+                            cubit.changeAppMode();
                           },
                         ),
                         const SizedBox(
@@ -107,10 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintInput: "$PASSWORD $IS_REQUIRED",
                           prefixInputIcon: Icons.password_outlined,
                           validate: (value) => getFieldErrorMessage("$value"),
-                          suffixInputIcon: controller.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                          isVisiblePassword: controller.isPasswordVisible,
+                          suffixInputIcon: cubit.isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          isVisiblePassword: cubit.isPasswordVisible,
                           onPressedSuffixIcon: (){
-                            controller.changePasswordVisibility();
+                            cubit.changePasswordVisibility();
                           },
                         ),
                         const SizedBox(
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               CustomButton(
                                   onPressed: () {
                                     if (isEveryFieldsValidated(formKey)) {
-                                      controller.login(
+                                      cubit.login(
                                         username: usernameController.text.toString(),
                                         password: passwordController.text.toString(),
                                       );

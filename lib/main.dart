@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
       child: BlocConsumer<AppCubit, AppStates>(
           listener: (BuildContext context, AppStates state) {},
           builder: (BuildContext context, state) {
-            var controller = AppCubit.get(context);
-            AppOrganization.aoIsDarkMode = controller.getIsDarkMode();
+            var cubit = AppCubit.get(context);
+            AppOrganization.aoIsDarkMode = cubit.getIsDarkMode();
 
             // statusBae styles...
             SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             ));
 
             return MaterialApp(
-              initialRoute: INITIAL_ROUTE,
+              initialRoute: cubit.isThereUser() ? NOTES_ROUTE : INITIAL_ROUTE,
               routes: {
                 SIGNUP_ROUTE: (context) => const SignUpScreen(),
                 LOGIN_ROUTE: (context) => const LoginScreen(),

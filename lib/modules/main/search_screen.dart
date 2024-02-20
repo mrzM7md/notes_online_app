@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_online_app/models/notes_model.dart';
 import 'package:notes_online_app/modules/main/widgets/custom_build_note_item.dart';
 import 'package:notes_online_app/modules/main/widgets/custom_simple_appbar.dart';
 import 'package:notes_online_app/shared/app_organization.dart';
@@ -60,7 +61,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 15.0,
                         ),
                         itemCount: 22,
-                        itemBuilder:(BuildContext context, int index) => const CustomBuildNoteItem(),
+                        itemBuilder:(BuildContext context, int index) => CustomBuildNoteItem(note: Note.view(data: {"title": "Title", "content": "Content"})),
                       ),
                     ),
                   ],

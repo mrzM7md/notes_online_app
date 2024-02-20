@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheHelper {
@@ -9,12 +11,21 @@ class CacheHelper {
   }
 
 
-  static bool? getData({
+  static bool? getBool({
     required String key,
-  })
-  {
-    return sharedPreferences.getBool(key);
-  }
+  }) => sharedPreferences.getBool(key);
+
+  static String? getString({
+    required String key,
+  }) =>  sharedPreferences.getString(key);
+
+  static int? getInt({
+    required String key,
+  }) =>  sharedPreferences.getInt(key);
+
+  static double? getDouble({
+    required String key,
+  }) =>  sharedPreferences.getDouble(key);
 
   static Future<bool> setData({
     required String key,

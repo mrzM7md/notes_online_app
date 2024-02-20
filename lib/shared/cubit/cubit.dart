@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_online_app/models/notes_model.dart';
 import 'package:notes_online_app/models/user_model.dart';
 import 'package:notes_online_app/shared/app_organization.dart';
 import 'package:notes_online_app/shared/cubit/states.dart';
@@ -16,7 +17,7 @@ class AppCubit extends Cubit<AppStates> {
 
 
 //###################### START THEME PROCESS ######################//
-  bool _isDarkMode = CacheHelper.getData(key: 'isDark') ?? false;
+  bool _isDarkMode = CacheHelper.getBool(key: 'isDark') ?? false;
 
   bool getIsDarkMode() => _isDarkMode;
 
@@ -120,11 +121,20 @@ class AppCubit extends Cubit<AppStates> {
       try {
         if(response.statusCode == 200) {
           if(jsonDecode(response.body)['status'] == R_STATUS_SUCCESS){
+            Map<String, dynamic> dataResponded = jsonDecode(response.body)['data'];
             emit(AuthSuccessLoginState(
-                user: User.signup(data: data),
+                user: User.login(data: dataResponded),
                 message: 'successful login !!'
             ));
+
+            // extract user data after success login !!
+            setUserId(dataResponded['id']);
+            setUserName(dataResponded['name']);
+            setUsername(dataResponded['username']);
+            setEmail(dataResponded['email']);
+            setUserPassword(dataResponded['password']);
           }
+
           else if(jsonDecode(response.body)['status'] == R_STATUS_FAIL){
             emit(AuthFailLoginState(
                 message: 'wrong info !!'
@@ -156,6 +166,46 @@ class AppCubit extends Cubit<AppStates> {
     ;
   }
 
+  // get user data
+  int getUserId() => CacheHelper.getInt(key: 'user_id') ?? -1;
+  String getUserName() => CacheHelper.getString(key: 'name') ?? '';
+  String getUsername() => CacheHelper.getString(key: 'username') ?? '';
+  String getEmail() => CacheHelper.getString(key: 'email') ?? '';
+  String getUserPassword() => CacheHelper.getString(key: 'password') ?? '';
+
+  // set user data after login
+  void setUserId(int id) =>  CacheHelper.setData(key: 'user_id', value: id);
+  void setUserName(String name) =>  CacheHelper.setData(key: 'name', value: name);
+  void setUsername(String username) =>  CacheHelper.setData(key: 'username', value: username);
+  void setEmail(String email) =>  CacheHelper.setData(key: 'email', value: email);
+  void setUserPassword(String password) =>  CacheHelper.setData(key: 'user_id', value: password);
+
+  bool isThereUser() => getUserId() != -1;
+
 //###################### END LOGIN PROCESS ######################//
+
+
+
+//###################### START GET NOTES PROCESS ######################//
+  Future<List?> getAllUserNotes() async {
+    int userId = getUserId();
+    var response = await getAwaitNotes();
+
+      if(jsonDecode(response.body)['status'] == R_STATUS_SUCCESS){
+        List dataResponded = jsonDecode(response.body)['data'];
+        print(userId);
+        print(dataResponded);
+        return dataResponded;
+      }
+      print("FIELD STATUS: ${jsonDecode(response.body)['status']}, User id= ${getUserId()}");
+      return null;
+  }
+
+  Future getAwaitNotes() async {
+    return await getRequest(url: "$HTTP_LINK_VIEW?user=${getUserId()}");
+  }
+
+
+//###################### END GET NOTES PROCESS ######################//
 
 }

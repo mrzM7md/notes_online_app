@@ -1,3 +1,4 @@
+import 'package:notes_online_app/models/notes_model.dart';
 import 'package:notes_online_app/models/user_model.dart';
 
 abstract class AppStates{}
@@ -61,3 +62,16 @@ class AuthFailConnectionLoginState extends AppStates{
   });
 }
 //###################### END LOGIN STATES ######################//
+
+//###################### START NOTES STATES ######################//
+class ViewNotesState extends AppStates{
+  final String message;
+  final Note data;
+  ViewNotesState({
+    required this.message,
+    required this.data
+  });
+}
+//###################### END NOTES STATES ######################//
+
+
