@@ -41,9 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   bkgColor: Colors.greenAccent,
                   textColor: Colors.black
               );
-
               navigateTo(context, NOTES_ROUTE);
             }
+
             else if(state is AuthFailLoginState){
               getToast(message: state.message,
                   bkgColor: Colors.red,
@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textColor: Colors.white
               );
             }
+
           },
           builder: (BuildContext context, state) {
             var cubit = AppCubit.get(context);
@@ -160,12 +161,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _emailFocusNode.requestFocus());
+
+    upFocusNode(_emailFocusNode);
+
+    // _emailFocusNode.addListener(() {
+    //   if (_emailFocusNode.hasFocus) {
+    //     killFocusNode(_passwordFocusNode);
+    //   }
+    // });
   }
 
   @override
   void dispose() {
-    _passwordFocusNode.dispose();
+    killFocusNode(_passwordFocusNode);
     super.dispose();
   }
 }

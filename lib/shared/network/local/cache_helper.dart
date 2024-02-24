@@ -19,9 +19,15 @@ class CacheHelper {
     required String key,
   }) =>  sharedPreferences.getString(key);
 
-  static int? getInt({
-    required String key,
-  }) =>  sharedPreferences.getInt(key);
+  static int getInt({required String key}) {
+    var value = sharedPreferences.getInt(key);
+    if (value == null) {
+      return -1;
+    } else {
+      return value;
+    }
+  }
+
 
   static double? getDouble({
     required String key,

@@ -61,7 +61,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 15.0,
                         ),
                         itemCount: 22,
-                        itemBuilder:(BuildContext context, int index) => CustomBuildNoteItem(note: Note.view(data: {"title": "Title", "content": "Content"})),
+                        itemBuilder:(BuildContext context, int index) =>
+                            CustomBuildNoteItem(
+                                note: Note.view(data: {"title": "Title", "content": "Content"},),
+                                onTap: (){},
+                            ),
                       ),
                     ),
                   ],

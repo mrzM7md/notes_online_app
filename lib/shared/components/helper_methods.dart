@@ -32,13 +32,21 @@ void navigateTo(fromWidgetContext, toRoute) =>
         fromWidgetContext, toRoute
     );
 
+
 void back(context) =>
     Navigator.pop(
         context
     );
 
 void focusToNode(BuildContext context, FocusNode destinationNode)
-    => FocusScope.of(context).requestFocus(destinationNode);
+=> FocusScope.of(context).requestFocus(destinationNode);
+
+void upFocusNode(FocusNode node){
+  WidgetsBinding.instance.addPostFrameCallback((_) => node.requestFocus());
+}
+void killFocusNode(FocusNode node){
+  node.dispose();
+}
 
 void getToast({
   required String message,

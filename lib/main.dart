@@ -15,12 +15,14 @@ import 'package:notes_online_app/shared/style/theme.dart';
 import 'package:notes_online_app/shared/texts/routes.dart';
 
 import 'modules/auth/signup/sign_up_screen.dart';
+import 'modules/main/note_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // ensure that everything in this function already finished then start application `runApp()`
 
-  Bloc.observer = MyBlocObserver();
+  Bloc.observer = await MyBlocObserver();
+
   await CacheHelper.init();
 
   runApp(const MyApp());
@@ -57,13 +59,21 @@ class MyApp extends StatelessWidget {
                   : Brightness.light,
             ));
 
+            if (CacheHelper.getInt(key: 'user_id') != -1){
+              INITIAL_ROUTE = NOTES_ROUTE;
+            }
+
+            // print(CacheHelper.getInt(key: 'user_id'));
+
             return MaterialApp(
-              initialRoute: cubit.isThereUser() ? NOTES_ROUTE : INITIAL_ROUTE,
+              initialRoute: INITIAL_ROUTE,
               routes: {
                 SIGNUP_ROUTE: (context) => const SignUpScreen(),
                 LOGIN_ROUTE: (context) => const LoginScreen(),
                 NOTES_ROUTE: (context) => const NotesScreen(),
                 SEARCH_ROUTE: (context) => const SearchScreen(),
+                ADD_NOTE_ROUTE: (context) => const NoteScreen(),
+                UPDATE_NOTE_ROUTE: (context) => const NoteScreen(),
               },
               debugShowCheckedModeBanner: false,
               themeMode: AppOrganization.aoIsDarkMode

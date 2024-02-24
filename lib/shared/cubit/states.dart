@@ -72,6 +72,41 @@ class ViewNotesState extends AppStates{
     required this.data
   });
 }
+
+class ImageChangedState extends AppStates{}
 //###################### END NOTES STATES ######################//
 
+//###################### START ADD-EDIT NOTE STATE ######################//
+class AddEditNotesSuccessState extends AppStates{
+  final String message;
+  final Note data;
+  AddEditNotesSuccessState({
+    required this.message,
+    required this.data
+  });
+}
 
+class AddEditNotesFailState extends AppStates{
+  final String message;
+  AddEditNotesFailState({
+    required this.message,
+  });
+}
+
+class AddEditNotesLoadingState extends AppStates{}
+//###################### END ADD-EDIT NOTE STATE ######################//
+
+//###################### START DELETE NOTE STATE ######################//
+class DeleteNotesSuccessState extends AppStates{
+  final String message;
+  DeleteNotesSuccessState({
+    required this.message,
+  });
+}
+class DeleteNotesFailState extends AppStates{
+  final String message;
+  DeleteNotesFailState({
+    required this.message,
+  });
+}
+//###################### END DELETE NOTE STATE ######################//

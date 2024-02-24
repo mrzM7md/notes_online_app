@@ -22,7 +22,20 @@ class NotesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: BlocConsumer<AppCubit, AppStates>(
-            listener: (BuildContext context, AppStates state) {},
+            listener: (BuildContext context, AppStates state) {
+              if(state is DeleteNotesSuccessState){
+                getToast(message: state.message,
+                    bkgColor: Colors.greenAccent,
+                    textColor: Colors.black
+                );
+              }
+              else if(state is DeleteNotesFailState){
+                getToast(message: state.message,
+                    bkgColor: Colors.red,
+                    textColor: Colors.black
+                );
+              }
+            },
             builder: (BuildContext context, state) {
               var cubit = AppCubit.get(context);
               return Scaffold(
@@ -58,15 +71,15 @@ class NotesScreen extends StatelessWidget {
                                     title: "ALL NOTES",
                                   ),
                                   // not add `const`, then will not work !!
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-
-                                  CustomSearchButton(
-                                    onClick: () {
-                                      navigateTo(context, SEARCH_ROUTE);
-                                    },
-                                  ),
+                                  // const SizedBox(
+                                  //   height: 20,
+                                  // ),
+                                  //
+                                  // CustomSearchButton(
+                                  //   onClick: () {
+                                  //     navigateTo(context, SEARCH_ROUTE);
+                                  //   },
+                                  // ),
 
                                   const SizedBox(
                                     height: 20,
@@ -87,18 +100,74 @@ class NotesScreen extends StatelessWidget {
                                           ListView.separated(
                                               scrollDirection: Axis.vertical,
                                               shrinkWrap: true /* When i want to scroll as apart from screen.. */,
-                                              itemCount: 2,
+                                              itemCount: data!.length,
                                               separatorBuilder: (BuildContext context, int index) => const SizedBox(
                                                 height: 15.0,
                                               ),
                                               physics: const NeverScrollableScrollPhysics(),
-                                              itemBuilder:(BuildContext context, int index) =>
-                                                  CustomBuildNoteItem(
-                                                      note: Note.view(data: {
-                                                        "title": data![index]['title'],
-                                                        "content": data[index]['content'],
-                                                      })
-                                                  )
+                                              itemBuilder:(BuildContext context, int index) {
+
+                                                Note currentData = Note.view(data: {
+                                                  "id": data[index]['id'],
+                                                  "title": data[index]['title'],
+                                                  "content": data[index]['content'],
+                                                  "image": data[index]['image'],
+                                                });
+
+                                                return Dismissible(
+                                                  key: ValueKey<int>(index),
+                                                  direction: DismissDirection.endToStart,
+                                                  confirmDismiss: (direction) async {
+                                                    final bool res = await showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return AlertDialog(
+                                                            content: Text("هل أنت متأكد أنك تريد حذف العنصر؟"),
+                                                            actions: <Widget>[
+                                                              MaterialButton(
+                                                                child: Text(
+                                                                  "إلغاء",
+                                                                  style: TextStyle(color: Colors.black),
+                                                                ),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop(false);
+                                                                },
+                                                              ),
+                                                              MaterialButton(
+                                                                child: Text(
+                                                                  "حذف",
+                                                                  style: TextStyle(color: Colors.red),
+                                                                ),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop(true);
+                                                                  cubit.deleteNote(noteId: data[index]['id'], noteImage: data[index]["image"]);
+                                                                },
+                                                              ),
+                                                            ],
+                                                          );
+                                                        });
+                                                    return res;
+                                                  },
+                                                  background: Container(
+                                                    height: double.infinity,
+                                                    color: Colors.red,
+                                                    padding: const EdgeInsetsDirectional.only(end: 20.0),
+                                                    alignment: AlignmentDirectional.centerEnd,
+                                                    child: Icon(Icons.delete, color: Colors.white,),
+                                                  ),
+                                                  child: CustomBuildNoteItem(
+                                                    note: currentData,
+                                                    onTap: (){
+                                                      cubit.setCurrentNote(currentData);
+                                                      cubit.setImage(data[index]['image']);
+                                                      navigateTo(context, UPDATE_NOTE_ROUTE);
+                                                    },
+                                                  ),
+
+                                                );
+                                              }
+
+
                                           );
                                       }
 
@@ -114,7 +183,11 @@ class NotesScreen extends StatelessWidget {
                             child: FloatingActionButton.extended(
                               label: const Text("New"),
                               icon: const Icon(CupertinoIcons.add),
-                              onPressed: () {},
+                              onPressed: () {
+                                cubit.setCurrentNote(null, isNewNode: true);
+                                cubit.setImage("");
+                                navigateTo(context, ADD_NOTE_ROUTE);
+                              },
                             ),
                           )
                         ],

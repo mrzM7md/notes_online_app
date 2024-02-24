@@ -17,6 +17,7 @@ class CustomBuildInput extends StatelessWidget {
   Function? onPressedSuffixIcon;
   bool? isVisiblePassword;
   Function(String)? onFieldSubmitted;
+  Function(dynamic)? onChange;
 
   CustomBuildInput(
       {required this.textTitle,
@@ -32,6 +33,7 @@ class CustomBuildInput extends StatelessWidget {
       required this.validate,
       this.onPressedSuffixIcon,
       this.onFieldSubmitted,
+      this.onChange,
       super.key});
 
   @override
@@ -64,6 +66,7 @@ class CustomBuildInput extends StatelessWidget {
           style: TextStyle(
             color: isDarkMode ? thirdDarkModeColor : secondaryLightModeColor,
           ),
+          onChanged: onChange,
           decoration: InputDecoration(
             // hintText: '',
             labelText: hintInput,

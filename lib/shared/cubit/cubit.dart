@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_online_app/models/notes_model.dart';
@@ -128,10 +129,12 @@ class AppCubit extends Cubit<AppStates> {
             ));
 
             // extract user data after success login !!
+            print("Datatype: ${dataResponded['id'] is int}");
+
             setUserId(dataResponded['id']);
             setUserName(dataResponded['name']);
             setUsername(dataResponded['username']);
-            setEmail(dataResponded['email']);
+            setUserEmail(dataResponded['email']);
             setUserPassword(dataResponded['password']);
           }
 
@@ -148,7 +151,7 @@ class AppCubit extends Cubit<AppStates> {
         }
         else {
           emit(AuthFailConnectionLoginState(
-              message: 'check your connection !'
+              message: response.statusCode.toString()
           ));
         }
       }catch(ex){
@@ -170,15 +173,15 @@ class AppCubit extends Cubit<AppStates> {
   int getUserId() => CacheHelper.getInt(key: 'user_id') ?? -1;
   String getUserName() => CacheHelper.getString(key: 'name') ?? '';
   String getUsername() => CacheHelper.getString(key: 'username') ?? '';
-  String getEmail() => CacheHelper.getString(key: 'email') ?? '';
+  String getUserEmail() => CacheHelper.getString(key: 'email') ?? '';
   String getUserPassword() => CacheHelper.getString(key: 'password') ?? '';
 
   // set user data after login
   void setUserId(int id) =>  CacheHelper.setData(key: 'user_id', value: id);
   void setUserName(String name) =>  CacheHelper.setData(key: 'name', value: name);
   void setUsername(String username) =>  CacheHelper.setData(key: 'username', value: username);
-  void setEmail(String email) =>  CacheHelper.setData(key: 'email', value: email);
-  void setUserPassword(String password) =>  CacheHelper.setData(key: 'user_id', value: password);
+  void setUserEmail(String email) =>  CacheHelper.setData(key: 'email', value: email);
+  void setUserPassword(String password) =>  CacheHelper.setData(key: 'password', value: password);
 
   bool isThereUser() => getUserId() != -1;
 
@@ -205,6 +208,93 @@ class AppCubit extends Cubit<AppStates> {
     return await getRequest(url: "$HTTP_LINK_VIEW?user=${getUserId()}");
   }
 
+  Note _currentNote = Note.view(data: { // initiallization..
+    "id": -1,
+    "title": "",
+    "content": "",
+    "image": "",
+  });
+
+  void setCurrentNote(Note? currentNote, {bool isNewNode = false}) {
+    if(!isNewNode) {
+      _currentNote = currentNote!;
+    } else {
+      _currentNote = Note.view(data: { // initiallization..
+        "id": -1,
+        "title": "",
+        "content": "",
+        "image": "",
+      });
+    }
+  }
+  Note getCurrentNote() => _currentNote;
+
+
+  /////////// get aet image
+  var _image;
+  getImage() => _image ?? " ";
+
+  void setImage(Object image){
+    _image = image;
+    emit(ImageChangedState());
+  }
+
+  ///////////// Add Edit Note
+  void setNote({required String title, required String content, required int id, String lastImageName=""}){
+    emit(AddEditNotesLoadingState());
+    Map<String, dynamic> data = {
+      "note_id": "$id",
+      "note_title": title,
+      "note_content": content,
+      "user": "${getUserId()}",
+      "image": lastImageName,
+    };
+    var req;
+    if(getImage() is File){
+      print("Already file exists");
+      req = postRequestWithFile(url: id == -1 ? HTTP_LINK_ADD : HTTP_LINK_EDIT, data: data, file: getImage());
+    }
+    else{
+      print("Ther is no File!!!!");
+      req = postRequest(url: id == -1 ? HTTP_LINK_ADD : HTTP_LINK_EDIT, data: data);
+    }
+
+    req.then((response) {
+      if(response.statusCode == 200) {
+        if(jsonDecode(response.body)['status'] == R_STATUS_SUCCESS){
+          emit(AddEditNotesSuccessState(message: "Successful", data: Note.view(data: data)));
+        }
+        else if(jsonDecode(response.body)['status'] == "file-fail"){
+          emit(AddEditNotesFailState(message: jsonDecode(response.body)['message']));
+        }
+        else {
+          print("Unknown error has been");
+          emit(AddEditNotesFailState(message: "Unknown error has been"));
+        }
+      }
+      else {
+        throw("Check your internet connection") ;
+      }
+    }).catchError((error){
+      print(error);
+      emit(AddEditNotesFailState(message: "$error"));
+    });
+  }
+
+  /////////// delete Note
+  void deleteNote({required int noteId, required String noteImage}){
+    getRequest(url: "$HTTP_LINK_DELETE?user=${getUserId()}&note_id=$noteId&note_image=$noteImage").then((response){
+      if(response.statusCode == 200) {
+        emit(DeleteNotesSuccessState(message: 'Deleted Successful'));
+      }
+      else {
+        throw("Check your internet connection") ;
+      }
+    } ).catchError((error){
+      emit(DeleteNotesFailState(message: "$error"));
+    });
+    ;
+  }
 
 //###################### END GET NOTES PROCESS ######################//
 
